@@ -67,7 +67,7 @@ local Library = loadstring(
         game:HttpGet(
                 "https://raw.githubusercontent.com/Alexand4r16/sigma-hook/refs/heads/main/sigma_hook_debug.lua"
         )
-)({
+)({    
     cheatname = "SigmaHook",
     gamename = "SigmaHook",
     fileext = ".cfg",
@@ -75,6 +75,7 @@ local Library = loadstring(
     icon = "120404302634102",
     Accent = default_color,
 })
+
 local Flags, Pointers = Library.Flags, Library.Pointers
 getfenv(0)["Library"], getfenv(0)["Flags"], getfenv(0)["Pointers"] = Library, Flags, Pointers
 
@@ -1226,7 +1227,7 @@ local ui = {
     sections = {},
     tabs = {},
 }
-ui.window = Library:New({ Size = UDim2.new(0, 600, 0, 500) })
+ui.window = Library:New({ Size = UDim2.new(0, 600, 0, 600) })
 --
 getgenv().silent = false
 getgenv().silent_key = false
@@ -1234,24 +1235,20 @@ getgenv().silent_hitchance = 100
 --
 do -- menu
     do -- combat
-        ui.window:Seperator({ Name = "Combat" })
-        ui.tabs["Misc"] = ui.window:Page({
-            Name = "Misc",
-            Icon = "http://www.roblox.com/asset/?id=6023426921",
-        })
+        ui.window:Seperator({ Name = "Combat Settings" })
 
-        ui.tabs["legit"] = ui.window:Page({
-            Name = "Legit",
+        ui.tabs["General"] = ui.window:Page({
+            Name = "General",
             Icon = "http://www.roblox.com/asset/?id=6023426921",
         })
         do
-            ui.sections["legit_main"] = ui.tabs["legit"]:Section({ Name = "Main", Side = "Left", Size = 427 })
+            ui.sections["legit_main"] = ui.tabs["General"]:Section({ Name = "Main", Side = "Left", Size = 427 })
             ui.sections["legit_main"]:Toggle({ Name = "Aimbot", Flag = "Enable Aimbot" })
             ui.sections["legit_main"]:Toggle({
                 Name = "Silent Aim",
                 Flag = "Enable Silent Aim",
                 Callback = function(state)
-                    getgenv().silent = state
+                    getgenv().silent = state    
                 end,
             })
             ui.sections["legit_main"]:Toggle({ Name = "Inventory Viewer", Flag = "Armor Viewer" })
@@ -1310,7 +1307,7 @@ do -- menu
         end
         
         do
-            ui.sections["select_options"] = ui.tabs["legit"]:Section({ Name = "Select", Side = "Right", Size = 427 })
+            ui.sections["select_options"] = ui.tabs["General"]:Section({ Name = "Select", Side = "Right", Size = 427 })
             ui.sections["select_options"]:Toggle({ Name = "Team Check", Flag = "Friendly Check" })
             ui.sections["select_options"]:Toggle({ Name = "Visible Check", Flag = "Visible Check" })
             ui.sections["select_options"]:Toggle({ Name = "FOV Circle", Flag = "Enable FOV" })
@@ -1336,57 +1333,517 @@ do -- menu
             })
         end
         --
-        ui.tabs["rage"] = ui.window:Page({
-            Name = "Rage",
-            "http://www.roblox.com/asset/?id=6023426921",
+
+    do -- visuals
+        ui.window:Seperator({ Name = "Visuals Settings" })
+        ui.tabs["Visuals"] = ui.window:Page({
+            Name = "Player",
+            Icon = "http://www.roblox.com/asset/?id=6031075931",
         })
         do
-            ui.sections["rage_main"] = ui.tabs["rage"]:Section({ Name = "Player", Side = "Left", Size = 427 })
-            ui.sections["rage_main"]:Toggle({ Name = "Always Grounded", Flag = "Always Grounded" })
-            ui.sections["rage_main"]:Toggle({ Name = "Always Sprint", Flag = "Always Sprint" })
-            ui.sections["rage_main"]:Toggle({ Name = "Spiderclimb", Flag = "Spiderclimb" })
-
-            ui.sections["rage_main"]:Keybind({
-                Flag = "Spiderclimb Keybind",
-                Name = "Spiderclimb Keybind",
-                Default = Enum.KeyCode.Space,
-                Mode = "Hold",
-            })
-            ui.sections["rage_main"]:Slider({
-                Name = "Spiderclimb Speed",
-                Flag = "Spiderclimb Speed",
-                Default = 0.75,
-                Minimum = 0.5,
-                Maximum = 1.5,
-                Decimals = 0.01,
+            ui.sections["esp"] = ui.tabs["Visuals"]:Section({ Name = "ESP", Side = "Left", Size = 423 })
+            ui.sections["esp"]:Toggle({ Name = "Names", Flag = "Enable Names" })
+            ui.sections["esp"]:Toggle({ Name = "Boxes", Flag = "Enable Boxes" })
+            ui.sections["esp"]:Toggle({ Name = "Distance", Flag = "Enable Distance" })
+            ui.sections["esp"]:Toggle({ Name = "Weapon", Flag = "Enable Weapon" })
+            ui.sections["esp"]:Toggle({ Name = "Healthbar", Flag = "Enable Healthbar" })
+            ui.sections["esp"]:Toggle({ Name = "Visible Icons", Flag = "Enable Visible Icons" })
+            ui.sections["esp"]:Toggle({ Name = "Healthtext", Flag = "Enable Healthtext" })
+            ui.sections["esp"]:Toggle({ Name = "Viewangle", Flag = "Enable Viewangle" })
+            ui.sections["esp"]:Slider({
+                Name = "Viewangle Length",
+                Flag = "Viewangle Length",
+                Default = 5,
+                Minimum = 1,
+                Maximum = 15,
+                Decimals = 0.1,
                 Ending = "",
             })
+            ui.sections["esp"]:Toggle({ Name = "Skeleton", Flag = "Enable Skeletons" })
+            ui.sections["esp"]:Slider({
+                Name = "Skeleton Thickness",
+                Flag = "Skeleton Thickness",
+                Default = 1,
+                Minimum = 1,
+                Maximum = 2,
+                Decimals = 0.1,
+                Ending = "",
+            })
+            ui.sections["esp"]:Toggle({ Name = "Chams", Flag = "Enable Chams" })
+            ui.sections["esp"]:Slider({
+                Name = "Chams Opacity",
+                Flag = "Chams Opacity",
+                Default = 50,
+                Minimum = 0,
+                Maximum = 100,
+                Decimals = 1,
+                Ending = "%",
+            })
+            ui.sections["esp"]:List({
+                Name = "Chams",
+                Flag = "Chams Visible Check",
+                Options = { "Visible Only", "Always Visible" },
+            })
         end
         do
-            ui.sections["camera"] = ui.tabs["rage"]:Section({ Name = "Camera", Side = "Right", Size = 187 })
-            ui.sections["camera"]:Toggle({ Name = "FOV", Flag = "FOV" })
-            ui.sections["camera"]:Slider({
-                Name = "FOV Ammount",
-                Flag = "FOV Ammount",
-                Default = 70,
-                Minimum = 30,
-                Maximum = 120,
-                Decimals = 1,
-                Ending = "x",
+            ui.sections["esp_colors"] = ui.tabs["Visuals"]:Section({ Name = "ESP Colors", Side = "Right", Size = 257 })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Names Color",
+                Flag = "Names Accent",
+                Default = Color3.fromRGB(255, 255, 255),
             })
-            ui.sections["camera"]:Toggle({ Name = "Zoom", Flag = "Zoom" })
-            ui.sections["camera"]:Keybind({ Flag = "Zoom Keybind", Name = "Zoom Keybind", Mode = "Hold" })
-            ui.sections["camera"]:Slider({
-                Name = "Zoom Ammount",
-                Flag = "Zoom Ammount",
-                Default = 30,
-                Minimum = 5,
-                Maximum = 70,
-                Decimals = 1,
-                Ending = "x",
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Boxes Color",
+                Flag = "Boxes Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Distance Color",
+                Flag = "Distance Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Weapon Color",
+                Flag = "Weapon Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Visible Icon Color",
+                Flag = "Visible Icon Accent",
+                Default = Color3.fromRGB(255, 0, 0),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Viewangle Color",
+                Flag = "Viewangle Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Skeletons Color",
+                Flag = "Skeletons Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Chams Color",
+                Flag = "Chams Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["esp_colors"]:Colorpicker({
+                Name = "Highlight Color",
+                Flag = "Highlight Accent",
+                Default = Color3.fromRGB(255, 0, 0),
             })
         end
         do
+            ui.sections["esp settings"] =
+            ui.tabs["Visuals"]:Section({ Name = "ESP Settings", Side = "Right", Size = 187 })
+            ui.sections["esp settings"]:Toggle({ Name = "Highlight Target", Flag = "Highlight ESP" })
+            ui.sections["esp settings"]:Toggle({ Name = "Team Check", Flag = "Enable TeamCheck" })
+            ui.sections["esp settings"]:Toggle({ Name = "Display Name", Default = true, Flag = "Display Name" })
+            ui.sections["esp settings"]:Toggle({
+                Name = "Outline Skeletons/ViewAngle",
+                Flag = "Outline Skeletons/ViewAngle",
+            })
+            ui.sections["esp settings"]:Slider({
+                Name = "Max ESP Distance",
+                Flag = "Max ESP Distance",
+                Default = 500,
+                Minimum = 100,
+                Maximum = 2500,
+                Decimals = 1,
+                Ending = "s",
+            })
+        end
+        --
+        ui.tabs["world"] = ui.window:Page({
+            Name = "World",
+            Icon = "http://www.roblox.com/asset/?id=6034684930",
+        })
+        do
+            ui.sections["world esp"] = ui.tabs["world"]:Section({ Name = "ESP", Side = "Left", Size = 290 })
+            ui.sections["world esp"]:Toggle({ Name = "Enable", Flag = "Enable World ESP" })
+            ui.sections["world esp"]:Slider({
+                Name = "Max ESP Distance",
+                Flag = "World ESP Max Distance",
+                Default = 500,
+                Minimum = 100,
+                Maximum = 2500,
+                Decimals = 1,
+                Ending = "s",
+            })
+            ui.sections["world esp"]:Toggle({ Name = "Enable Wool ESP", Flag = "Enable Wool ESP" })
+            ui.sections["world esp"]:Colorpicker({
+                Name = "Wool ESP Color",
+                Flag = "Wool ESP Color",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            --
+            ui.sections["world esp"]:Toggle({ Name = "Enable Stone ESP", Flag = "Enable Stone ESP" })
+            ui.sections["world esp"]:Colorpicker({
+                Name = "Stone ESP Color",
+                Flag = "Stone ESP Color",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            --
+            ui.sections["world esp"]:Toggle({ Name = "Enable Metal ESP", Flag = "Enable Metal ESP" })
+            ui.sections["world esp"]:Colorpicker({
+                Name = "Metal ESP Color",
+                Flag = "Metal ESP Color",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            --
+            ui.sections["world esp"]:Toggle({ Name = "Enable Phosphate ESP", Flag = "Enable Phosphate ESP" })
+            ui.sections["world esp"]:Colorpicker({
+                Name = "Phosphate ESP Color",
+                Flag = "Phosphate ESP Color",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+        end
+        
+        do
+            ui.sections["world customisation"] =
+            ui.tabs["world"]:Section({ Name = "World Customisation", Side = "Right", Size = 287 })
+            ui.sections["world customisation"]:Toggle({
+                Name = "No Grass",
+                Callback = function(state)
+                    sethiddenproperty(Workspace:FindFirstChildOfClass("Terrain"), "Decoration", not state)
+                end,
+            })
+            ui.sections["world customisation"]:Toggle({ Name = "No Fog", Flag = "Enable No Fog" })
+            ui.sections["world customisation"]:Toggle({
+                Name = "Fullbright",
+                Flag = "Enable Fullbright",
+                Callback = function(state)
+                    lighting["GlobalShadows"] = state
+                end,
+            })
+            ui.sections["world customisation"]:Toggle({ Name = "Ambient", Flag = "Enable Ambient" })
+            ui.sections["world customisation"]:Colorpicker({
+                Name = "Outdoor Ambient Color",
+                Flag = "Outdoor Ambient Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["world customisation"]:Colorpicker({
+                Name = "Ambient Color",
+                Flag = "Ambient Accent",
+                Default = Color3.fromRGB(255, 255, 255),
+            })
+            ui.sections["world customisation"]:List({
+                Name = "Skybox",
+                Flag = "Skyboxes",
+                Options = skys,
+                Callback = function(state)
+                    if skyboxes[state] then
+                        sky.SkyboxBk = "rbxassetid://" .. skyboxes[state][1]
+                        sky.SkyboxDn = "rbxassetid://" .. skyboxes[state][2]
+                        sky.SkyboxFt = "rbxassetid://" .. skyboxes[state][3]
+                        sky.SkyboxLf = "rbxassetid://" .. skyboxes[state][4]
+                        sky.SkyboxRt = "rbxassetid://" .. skyboxes[state][5]
+                        sky.SkyboxUp = "rbxassetid://" .. skyboxes[state][6]
+                    end
+                end,
+            })
+        end
+        do
+            ui.tabs["local"] = ui.window:Page({
+                Name = "Local",
+                Icon = "http://www.roblox.com/asset/?id=6034684930",
+            })
+            do
+                ui.sections["viewmodel"] = ui.tabs["local"]:Section({ Name = "Viewmodel", Side = "Right", Size = 137 })
+                ui.sections["viewmodel"]:Toggle({ Name = "Local Chams", Flag = "Local Chams" })
+                ui.sections["viewmodel"]:Slider({
+                    Name = "Local Chams Opacity",
+                    Flag = "Local Chams Opacity",
+                    Default = 50,
+                    Minimum = 0,
+                    Maximum = 100,
+                    Decimals = 1,
+                    Ending = "%",
+                })
+                ui.sections["viewmodel"]:Colorpicker({
+                    Name = "Local Chams Color",
+                    Flag = "Local Chams Accent",
+                    Default = Color3.fromRGB(255, 255, 255),
+                })
+            end
+            
+            --
+            do
+                ui.sections["Freecam"] = ui.tabs["local"]:Section({ Name = "Freecam", Side = "Left", Size = 160 })
+                ui.sections["Freecam"]:Toggle({ Name = "Freecam", Flag = "Enable Freecam" })
+                ui.sections["Freecam"]:Keybind({
+                    Flag = "Freecam Keybind",
+                    Name = "Freecam Keybind",
+                    Default = Enum.KeyCode.K,
+                    Mode = "Toggle",
+                })
+                ui.sections["Freecam"]:Slider({
+                    Name = "Freecam Speed",
+                    Flag = "Freecam Speed",
+                    Default = 2,
+                    Minimum = 0.5,
+                    Maximum = 10,
+                    Decimals = 0.1,
+                    Ending = "",
+                })
+                ui.sections["Freecam"]:Slider({
+                    Name = "Freecam Sensitivity",
+                    Flag = "Freecam Sensitivity",
+                    Default = 0.3,
+                    Minimum = 0.1,
+                    Maximum = 1,
+                    Decimals = 0.01,
+                    Ending = "",
+                })
+                ---
+                ui.sections["Third"] = ui.tabs["local"]:Section({ Name = "Third Person", Side = "Right", Size = 125 })
+                ui.sections["Third"]:Toggle({ Name = "Third Person", Flag = "Third Person" })
+                ui.sections["Third"]:Keybind({
+                    Flag = "Third Person Key",
+                    Name = "Third Person Key",
+                    Default = Enum.KeyCode.J,
+                    Mode = "Toggle",
+                })
+                ui.sections["Third"]:Slider({
+                    Name = "Third Person Distance",
+                    Flag = "Third Person Distance",
+                    Default = 5,
+                    Minimum = 1,
+                    Maximum = 10,
+                    Decimals = 0.1,
+                    Ending = "",
+                })
+
+                ui.sections["Third"] = ui.tabs["local"]:Section({ Name = "Third Person", Side = "Right", Size = 95 })
+                ui.sections["Third"]:Toggle({ Name = "Anti Aim", Flag = "Anti Aim" })
+                ui.sections["Third"]:Slider({
+                    Name = "Anti Aim Speed",
+                    Flag = "Anti Aim Speed",
+                    Default = 50,
+                    Minimum = 1,
+                    Maximum = 100,
+                    Decimals = 1,
+                    Ending = "",
+                })
+            end
+        end
+    end
+-- Crosshairs
+
+local Drawing = Drawing or {}
+
+local settings = {
+    color = Color3.fromRGB(255, 255, 255),
+    size = 0.6,
+    spinSpeed = 5,
+    isSpinning = false,
+    visible = false,
+    crosshairType = "circle",
+}
+
+local crosshair = {}
+local screenCenter = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
+local rotationAngle = 0
+
+local function updateCenter()
+    screenCenter = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
+end
+
+local function createCrosshair(crosshairType)
+    if settings.crosshairType ~= crosshairType or not crosshair.object then
+        if crosshair.object then
+            if type(crosshair.object) == "table" then
+                for _, part in pairs(crosshair.object) do
+                    if part.Remove then part:Remove() end
+                end
+            elseif crosshair.object.Remove then
+                crosshair.object:Remove()
+            end
+        end
+
+        settings.crosshairType = crosshairType
+
+        if crosshairType == "circle" then
+            local circle = Drawing.new("Circle")
+            circle.Filled = false
+            circle.Thickness = 2
+            crosshair.object = circle
+        elseif crosshairType == "square" then
+            local square = Drawing.new("Square")
+            square.Filled = false
+            square.Thickness = 2
+            crosshair.object = square
+        elseif crosshairType == "x" then
+            local line1 = Drawing.new("Line")
+            local line2 = Drawing.new("Line")
+            line1.Thickness = 2
+            line2.Thickness = 2
+            crosshair.object = {line1, line2}
+        end
+    end
+
+    updateDrawings()
+end
+
+function updateDrawings()
+    if not crosshair.object then return end
+
+    if settings.crosshairType == "circle" then
+        local circle = crosshair.object
+        circle.Position = screenCenter
+        circle.Radius = settings.size * 10
+        circle.Color = settings.color
+        circle.Visible = settings.visible
+
+    elseif settings.crosshairType == "square" then
+        local square = crosshair.object
+        square.Position = screenCenter - Vector2.new(settings.size * 5, settings.size * 5)
+        square.Size = Vector2.new(settings.size * 10, settings.size * 10)
+        square.Color = settings.color
+        square.Visible = settings.visible
+
+    elseif settings.crosshairType == "x" then
+        local s = settings.size * 5
+        local line1 = crosshair.object[1]
+        local line2 = crosshair.object[2]
+
+        line1.From = screenCenter - Vector2.new(s, s)
+        line1.To = screenCenter + Vector2.new(s, s)
+        line2.From = screenCenter + Vector2.new(s, -s)
+        line2.To = screenCenter - Vector2.new(s, -s)
+
+        line1.Color = settings.color
+        line2.Color = settings.color
+        line1.Visible = settings.visible
+        line2.Visible = settings.visible
+    end
+end
+
+local function updateVisibility(visible)
+    settings.visible = visible
+    updateDrawings()
+end
+
+local function updateCrosshairType(newType)
+    createCrosshair(newType)
+end
+
+local function updateSize(size)
+    settings.size = size
+    updateDrawings()
+end
+
+local function updateColor(color)
+    settings.color = color
+    updateDrawings()
+end
+
+local function updateSpinSpeed(speed)
+    settings.spinSpeed = speed
+end
+
+local function toggleSpinning(isSpinning)
+    settings.isSpinning = isSpinning
+end
+
+local function rotateLine(from, to, angle)
+    local sin, cos = math.sin(angle), math.cos(angle)
+    local relFrom = from - screenCenter
+    local relTo = to - screenCenter
+    local rotFrom = Vector2.new(relFrom.X * cos - relFrom.Y * sin, relFrom.X * sin + relFrom.Y * cos) + screenCenter
+    local rotTo = Vector2.new(relTo.X * cos - relTo.Y * sin, relTo.X * sin + relTo.Y * cos) + screenCenter
+    return rotFrom, rotTo
+end
+
+local function updateCrosshairRotation()
+    if settings.isSpinning and settings.visible and settings.crosshairType == "x" and type(crosshair.object) == "table" then
+        rotationAngle = (rotationAngle + settings.spinSpeed) % 360
+        local angle = math.rad(rotationAngle)
+        local s = settings.size * 5
+        local line1 = crosshair.object[1]
+        local line2 = crosshair.object[2]
+        line1.From, line1.To = rotateLine(screenCenter - Vector2.new(s, s), screenCenter + Vector2.new(s, s), angle)
+        line2.From, line2.To = rotateLine(screenCenter + Vector2.new(s, -s), screenCenter - Vector2.new(s, -s), angle)
+    end
+end
+
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateCenter)
+
+ui.sections["Crosshair"] = ui.tabs["local"]:Section({ Name = "Crosshair", Side = "Left", Size = 240 })
+
+ui.sections["Crosshair"]:List({
+    Name = "Crosshair Type",
+    Flag = "Crosshair_Type",
+    Options = {"circle", "square", "x"},
+    Default = "circle",
+    Callback = function(selectedType)
+        updateCrosshairType(selectedType)
+    end,
+})
+
+ui.sections["Crosshair"]:Toggle({
+    Name = "Toggle Crosshair",
+    Flag = "Crosshair_Toggle",
+    Default = false,
+    Callback = function(visible)
+        updateVisibility(visible)
+    end,
+})
+
+ui.sections["Crosshair"]:Slider({
+    Name = "Crosshair Size",
+    Flag = "CrosshairSizeSlider",
+    Default = 0.6,
+    Minimum = 0.05,
+    Maximum = 5,
+    Decimals = 0.01,
+    Callback = function(size)
+        updateSize(size)
+    end,
+})
+
+ui.sections["Crosshair"]:Colorpicker({
+    Name = "Crosshair Color",
+    Flag = "Crosshair_Color",
+    Default = Color3.fromRGB(255, 255, 255),
+    Callback = function(color)
+        updateColor(color)
+    end,
+})
+
+ui.sections["Crosshair"]:Toggle({
+    Name = "Toggle Spinning",
+    Flag = "Crosshair_Spinning_Toggle",
+    Default = false,
+    Callback = function(state)
+        toggleSpinning(state)
+    end,
+})
+
+ui.sections["Crosshair"]:Slider({
+    Name = "Spin Speed",
+    Flag = "Crosshair_SpinSpeed",
+    Default = 5,
+    Minimum = 1,
+    Maximum = 20,
+    Decimals = 0.1,
+    Ending = "s",
+    Callback = function(speed)
+        updateSpinSpeed(speed)
+    end,
+})
+
+createCrosshair(settings.crosshairType)
+
+game:GetService("RunService").Heartbeat:Connect(updateCrosshairRotation)
+    --
+    do -- misc
+    ui.window:Seperator({ Name = "Misc Settings" })
+    ui.tabs["Misc"] = ui.window:Page({
+            Name = "Misc",
+            Icon = "http://www.roblox.com/asset/?id=6023426921",
+        })
+    do
             local gun_mods = {
                 old_recoil1 = nil,
                 old_recoil2 = nil,
@@ -1758,310 +2215,8 @@ end)
             --ui.sections['rage_weaponmods']:Toggle({Name = 'Instant Aim', Flag = 'Instant Aim'})
             --ui.sections['rage_weaponmods']:Toggle({Name = 'Instant Equip', Flag = 'Instant Equip'})
         end
-    end
-    --
-    do -- visuals
-        ui.window:Seperator({ Name = "Visuals" })
-        ui.tabs["visuals"] = ui.window:Page({
-            Name = "Player",
-            Icon = "http://www.roblox.com/asset/?id=6031075931",
-        })
-        do
-            ui.sections["esp"] = ui.tabs["visuals"]:Section({ Name = "ESP", Side = "Left", Size = 423 })
-            ui.sections["esp"]:Toggle({ Name = "Names", Flag = "Enable Names" })
-            ui.sections["esp"]:Toggle({ Name = "Boxes", Flag = "Enable Boxes" })
-            ui.sections["esp"]:Toggle({ Name = "Distance", Flag = "Enable Distance" })
-            ui.sections["esp"]:Toggle({ Name = "Weapon", Flag = "Enable Weapon" })
-            ui.sections["esp"]:Toggle({ Name = "Healthbar", Flag = "Enable Healthbar" })
-            ui.sections["esp"]:Toggle({ Name = "Visible Icons", Flag = "Enable Visible Icons" })
-            ui.sections["esp"]:Toggle({ Name = "Healthtext", Flag = "Enable Healthtext" })
-            ui.sections["esp"]:Toggle({ Name = "Viewangle", Flag = "Enable Viewangle" })
-            ui.sections["esp"]:Slider({
-                Name = "Viewangle Length",
-                Flag = "Viewangle Length",
-                Default = 5,
-                Minimum = 1,
-                Maximum = 15,
-                Decimals = 0.1,
-                Ending = "",
-            })
-            ui.sections["esp"]:Toggle({ Name = "Skeleton", Flag = "Enable Skeletons" })
-            ui.sections["esp"]:Slider({
-                Name = "Skeleton Thickness",
-                Flag = "Skeleton Thickness",
-                Default = 1,
-                Minimum = 1,
-                Maximum = 2,
-                Decimals = 0.1,
-                Ending = "",
-            })
-            ui.sections["esp"]:Toggle({ Name = "Chams", Flag = "Enable Chams" })
-            ui.sections["esp"]:Slider({
-                Name = "Chams Opacity",
-                Flag = "Chams Opacity",
-                Default = 50,
-                Minimum = 0,
-                Maximum = 100,
-                Decimals = 1,
-                Ending = "%",
-            })
-            ui.sections["esp"]:List({
-                Name = "Chams",
-                Flag = "Chams Visible Check",
-                Options = { "Visible Only", "Always Visible" },
-            })
         end
         do
-            ui.sections["esp_colors"] = ui.tabs["visuals"]:Section({ Name = "ESP Colors", Side = "Right", Size = 257 })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Names Color",
-                Flag = "Names Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Boxes Color",
-                Flag = "Boxes Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Distance Color",
-                Flag = "Distance Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Weapon Color",
-                Flag = "Weapon Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Visible Icon Color",
-                Flag = "Visible Icon Accent",
-                Default = Color3.fromRGB(255, 0, 0),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Viewangle Color",
-                Flag = "Viewangle Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Skeletons Color",
-                Flag = "Skeletons Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Chams Color",
-                Flag = "Chams Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["esp_colors"]:Colorpicker({
-                Name = "Highlight Color",
-                Flag = "Highlight Accent",
-                Default = Color3.fromRGB(255, 0, 0),
-            })
-        end
-        do
-            ui.sections["esp settings"] =
-            ui.tabs["visuals"]:Section({ Name = "ESP Settings", Side = "Right", Size = 187 })
-            ui.sections["esp settings"]:Toggle({ Name = "Highlight Target", Flag = "Highlight ESP" })
-            ui.sections["esp settings"]:Toggle({ Name = "Team Check", Flag = "Enable TeamCheck" })
-            ui.sections["esp settings"]:Toggle({ Name = "Display Name", Default = true, Flag = "Display Name" })
-            ui.sections["esp settings"]:Toggle({
-                Name = "Outline Skeletons/ViewAngle",
-                Flag = "Outline Skeletons/ViewAngle",
-            })
-            ui.sections["esp settings"]:Slider({
-                Name = "Max ESP Distance",
-                Flag = "Max ESP Distance",
-                Default = 500,
-                Minimum = 100,
-                Maximum = 2500,
-                Decimals = 1,
-                Ending = "s",
-            })
-        end
-        --
-        ui.tabs["world"] = ui.window:Page({
-            Name = "World",
-            Icon = "http://www.roblox.com/asset/?id=6034684930",
-        })
-        do
-            ui.sections["world esp"] = ui.tabs["world"]:Section({ Name = "ESP", Side = "Left", Size = 290 })
-            ui.sections["world esp"]:Toggle({ Name = "Enable", Flag = "Enable World ESP" })
-            ui.sections["world esp"]:Slider({
-                Name = "Max ESP Distance",
-                Flag = "World ESP Max Distance",
-                Default = 500,
-                Minimum = 100,
-                Maximum = 2500,
-                Decimals = 1,
-                Ending = "s",
-            })
-            ui.sections["world esp"]:Toggle({ Name = "Enable Wool ESP", Flag = "Enable Wool ESP" })
-            ui.sections["world esp"]:Colorpicker({
-                Name = "Wool ESP Color",
-                Flag = "Wool ESP Color",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            --
-            ui.sections["world esp"]:Toggle({ Name = "Enable Stone ESP", Flag = "Enable Stone ESP" })
-            ui.sections["world esp"]:Colorpicker({
-                Name = "Stone ESP Color",
-                Flag = "Stone ESP Color",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            --
-            ui.sections["world esp"]:Toggle({ Name = "Enable Metal ESP", Flag = "Enable Metal ESP" })
-            ui.sections["world esp"]:Colorpicker({
-                Name = "Metal ESP Color",
-                Flag = "Metal ESP Color",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            --
-            ui.sections["world esp"]:Toggle({ Name = "Enable Phosphate ESP", Flag = "Enable Phosphate ESP" })
-            ui.sections["world esp"]:Colorpicker({
-                Name = "Phosphate ESP Color",
-                Flag = "Phosphate ESP Color",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-        end
-        do
-            local bases_folder = {
-                workspace.Bases.Loners:FindFirstChild("External Wooden Gate") or nil,
-                workspace.Bases.Loners:FindFirstChild("External Stone Gate") or nil,
-            }
-
-            for _, v in pairs(workspace.Bases:GetChildren()) do
-                if v:IsA("Folder") and v.Name == "Base" then
-                    for _, sub in ipairs({"Doorway", "Floor", "Triangle Floor", "Foundation", "Triangle Foundation", "Wall", "Wall Frame", "Window"}) do
-                        local sub_folder = v:FindFirstChild(sub)
-                        if sub_folder then
-                            table.insert(bases_folder, sub_folder)
-                        end
-                    end
-                end
-            end
-
-            getgenv().xray_toggle = false
-            getgenv().xray_enabled = false
-            getgenv().xray_opacity = 0.5
-
-            local function upd_xray(state)
-                if not getgenv().xray_toggle then
-                    return
-                end
-                for _, v in pairs(bases_folder) do
-                    for _, obj in ipairs(v:GetDescendants()) do
-                        if obj:IsA("MeshPart") then
-                            obj.Transparency = state and getgenv().xray_opacity or 0
-                        end
-                    end
-                end
-            end
-
-            ui.sections["xray"] = ui.tabs["Misc"]:Section({ Name = "Xray", Side = "Left", Size = 133 })
-            ui.sections["xray"]:Toggle({
-                Name = "Enable",
-                Flag = "Enable Xray",
-                Callback = function(state)
-                    getgenv().xray_toggle = state
-                end,
-            })
-            ui.sections["xray"]:Keybind({
-                Flag = "Xray Keybind",
-                Name = "Xray Keybind",
-                Default = Enum.KeyCode.T,
-                Mode = "Toggle",
-                Callback = function()
-                    if getgenv().xray_toggle then
-                        getgenv().xray_enabled = not getgenv().xray_enabled
-                        upd_xray(getgenv().xray_enabled)
-                    end
-                end,
-            })
-            ui.sections["xray"]:Slider({
-                Name = "Opacity",
-                Flag = "Xray Opacity",
-                Default = 50,
-                Minimum = 0,
-                Maximum = 100,
-                Decimals = 1,
-                Ending = "%",
-                Callback = function(state)
-                    getgenv().xray_opacity = state / 100
-                    if getgenv().xray_toggle and getgenv().xray_enabled then
-                        upd_xray(true)
-                    end
-                end,
-            })
-        end
-        do
-            ui.sections["world customisation"] =
-            ui.tabs["world"]:Section({ Name = "World Customisation", Side = "Right", Size = 287 })
-            ui.sections["world customisation"]:Toggle({
-                Name = "No Grass",
-                Callback = function(state)
-                    sethiddenproperty(Workspace:FindFirstChildOfClass("Terrain"), "Decoration", not state)
-                end,
-            })
-            ui.sections["world customisation"]:Toggle({ Name = "No Fog", Flag = "Enable No Fog" })
-            ui.sections["world customisation"]:Toggle({
-                Name = "Fullbright",
-                Flag = "Enable Fullbright",
-                Callback = function(state)
-                    lighting["GlobalShadows"] = state
-                end,
-            })
-            ui.sections["world customisation"]:Toggle({ Name = "Ambient", Flag = "Enable Ambient" })
-            ui.sections["world customisation"]:Colorpicker({
-                Name = "Outdoor Ambient Color",
-                Flag = "Outdoor Ambient Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["world customisation"]:Colorpicker({
-                Name = "Ambient Color",
-                Flag = "Ambient Accent",
-                Default = Color3.fromRGB(255, 255, 255),
-            })
-            ui.sections["world customisation"]:List({
-                Name = "Skybox",
-                Flag = "Skyboxes",
-                Options = skys,
-                Callback = function(state)
-                    if skyboxes[state] then
-                        sky.SkyboxBk = "rbxassetid://" .. skyboxes[state][1]
-                        sky.SkyboxDn = "rbxassetid://" .. skyboxes[state][2]
-                        sky.SkyboxFt = "rbxassetid://" .. skyboxes[state][3]
-                        sky.SkyboxLf = "rbxassetid://" .. skyboxes[state][4]
-                        sky.SkyboxRt = "rbxassetid://" .. skyboxes[state][5]
-                        sky.SkyboxUp = "rbxassetid://" .. skyboxes[state][6]
-                    end
-                end,
-            })
-        end
-        do
-            ui.tabs["local"] = ui.window:Page({
-                Name = "Local",
-                Icon = "http://www.roblox.com/asset/?id=6034684930",
-            })
-            do
-                ui.sections["viewmodel"] = ui.tabs["local"]:Section({ Name = "Viewmodel", Side = "Right", Size = 137 })
-                ui.sections["viewmodel"]:Toggle({ Name = "Local Chams", Flag = "Local Chams" })
-                ui.sections["viewmodel"]:Slider({
-                    Name = "Local Chams Opacity",
-                    Flag = "Local Chams Opacity",
-                    Default = 50,
-                    Minimum = 0,
-                    Maximum = 100,
-                    Decimals = 1,
-                    Ending = "%",
-                })
-                ui.sections["viewmodel"]:Colorpicker({
-                    Name = "Local Chams Color",
-                    Flag = "Local Chams Accent",
-                    Default = Color3.fromRGB(255, 255, 255),
-                })
-            end
-            do
                 ui.sections["traps"] = ui.tabs["Misc"]:Section({ Name = "Misc Fun", Side = "Left", Size = 250 })
                 ui.sections["traps"]:Toggle({ Name = "Bullet Tracers", Flag = "Bullet Tracers" })
                 ui.sections["traps"]:Toggle({ Name = "Hitmarkers", Flag = "Hitmarkers" })
@@ -2331,276 +2486,132 @@ end)
                     end
                 end)
             end
-            --
             do
-                ui.sections["Freecam"] = ui.tabs["local"]:Section({ Name = "Freecam", Side = "Left", Size = 160 })
-                ui.sections["Freecam"]:Toggle({ Name = "Freecam", Flag = "Enable Freecam" })
-                ui.sections["Freecam"]:Keybind({
-                    Flag = "Freecam Keybind",
-                    Name = "Freecam Keybind",
-                    Default = Enum.KeyCode.K,
-                    Mode = "Toggle",
-                })
-                ui.sections["Freecam"]:Slider({
-                    Name = "Freecam Speed",
-                    Flag = "Freecam Speed",
-                    Default = 2,
-                    Minimum = 0.5,
-                    Maximum = 10,
-                    Decimals = 0.1,
-                    Ending = "",
-                })
-                ui.sections["Freecam"]:Slider({
-                    Name = "Freecam Sensitivity",
-                    Flag = "Freecam Sensitivity",
-                    Default = 0.3,
-                    Minimum = 0.1,
-                    Maximum = 1,
-                    Decimals = 0.01,
-                    Ending = "",
-                })
-                ---
-                ui.sections["Third"] = ui.tabs["local"]:Section({ Name = "Third Person", Side = "Right", Size = 125 })
-                ui.sections["Third"]:Toggle({ Name = "Third Person", Flag = "Third Person" })
-                ui.sections["Third"]:Keybind({
-                    Flag = "Third Person Key",
-                    Name = "Third Person Key",
-                    Default = Enum.KeyCode.J,
-                    Mode = "Toggle",
-                })
-                ui.sections["Third"]:Slider({
-                    Name = "Third Person Distance",
-                    Flag = "Third Person Distance",
-                    Default = 5,
-                    Minimum = 1,
-                    Maximum = 10,
-                    Decimals = 0.1,
-                    Ending = "",
-                })
+            local bases_folder = {
+                workspace.Bases.Loners:FindFirstChild("External Wooden Gate") or nil,
+                workspace.Bases.Loners:FindFirstChild("External Stone Gate") or nil,
+            }
 
-                ui.sections["Third"] = ui.tabs["local"]:Section({ Name = "Third Person", Side = "Right", Size = 95 })
-                ui.sections["Third"]:Toggle({ Name = "Anti Aim", Flag = "Anti Aim" })
-                ui.sections["Third"]:Slider({
-                    Name = "Anti Aim Speed",
-                    Flag = "Anti Aim Speed",
-                    Default = 50,
-                    Minimum = 1,
-                    Maximum = 100,
-                    Decimals = 1,
-                    Ending = "",
-                })
-            end
-        end
-    end
--- Crosshairs
-
-local Drawing = Drawing or {}
-
-local settings = {
-    color = Color3.fromRGB(255, 255, 255),
-    size = 0.6,
-    spinSpeed = 5,
-    isSpinning = false,
-    visible = false,
-    crosshairType = "circle",
-}
-
-local crosshair = {}
-local screenCenter = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
-local rotationAngle = 0
-
-local function updateCenter()
-    screenCenter = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
-end
-
-local function createCrosshair(crosshairType)
-    if settings.crosshairType ~= crosshairType or not crosshair.object then
-        if crosshair.object then
-            if type(crosshair.object) == "table" then
-                for _, part in pairs(crosshair.object) do
-                    if part.Remove then part:Remove() end
+            for _, v in pairs(workspace.Bases:GetChildren()) do
+                if v:IsA("Folder") and v.Name == "Base" then
+                    for _, sub in ipairs({"Doorway", "Floor", "Triangle Floor", "Foundation", "Triangle Foundation", "Wall", "Wall Frame", "Window"}) do
+                        local sub_folder = v:FindFirstChild(sub)
+                        if sub_folder then
+                            table.insert(bases_folder, sub_folder)
+                        end
+                    end
                 end
-            elseif crosshair.object.Remove then
-                crosshair.object:Remove()
             end
+
+            getgenv().xray_toggle = false
+            getgenv().xray_enabled = false
+            getgenv().xray_opacity = 0.5
+
+            local function upd_xray(state)
+                if not getgenv().xray_toggle then
+                    return
+                end
+                for _, v in pairs(bases_folder) do
+                    for _, obj in ipairs(v:GetDescendants()) do
+                        if obj:IsA("MeshPart") then
+                            obj.Transparency = state and getgenv().xray_opacity or 0
+                        end
+                    end
+                end
+            end
+        
+            ui.sections["xray"] = ui.tabs["Misc"]:Section({ Name = "Xray", Side = "Left", Size = 133 })
+            ui.sections["xray"]:Toggle({
+                Name = "Enable",
+                Flag = "Enable Xray",
+                Callback = function(state)
+                    getgenv().xray_toggle = state
+                end,
+            })
+            ui.sections["xray"]:Keybind({
+                Flag = "Xray Keybind",
+                Name = "Xray Keybind",
+                Default = Enum.KeyCode.T,
+                Mode = "Toggle",
+                Callback = function()
+                    if getgenv().xray_toggle then
+                        getgenv().xray_enabled = not getgenv().xray_enabled
+                        upd_xray(getgenv().xray_enabled)
+                    end
+                end,
+            })
+            ui.sections["xray"]:Slider({
+                Name = "Opacity",
+                Flag = "Xray Opacity",
+                Default = 50,
+                Minimum = 0,
+                Maximum = 100,
+                Decimals = 1,
+                Ending = "%",
+                Callback = function(state)
+                    getgenv().xray_opacity = state / 100
+                    if getgenv().xray_toggle and getgenv().xray_enabled then
+                        upd_xray(true)
+                    end
+                end,
+            })
         end
 
-        settings.crosshairType = crosshairType
+    ui.tabs["rage"] = ui.window:Page({
+            Name = "Rage",
+            "http://www.roblox.com/asset/?id=6023426921",
+        })
 
-        if crosshairType == "circle" then
-            local circle = Drawing.new("Circle")
-            circle.Filled = false
-            circle.Thickness = 2
-            crosshair.object = circle
-        elseif crosshairType == "square" then
-            local square = Drawing.new("Square")
-            square.Filled = false
-            square.Thickness = 2
-            crosshair.object = square
-        elseif crosshairType == "x" then
-            local line1 = Drawing.new("Line")
-            local line2 = Drawing.new("Line")
-            line1.Thickness = 2
-            line2.Thickness = 2
-            crosshair.object = {line1, line2}
+        do
+            ui.sections["rage_main"] = ui.tabs["rage"]:Section({ Name = "Player", Side = "Left", Size = 427 })
+            ui.sections["rage_main"]:Toggle({ Name = "Always Grounded", Flag = "Always Grounded" })
+            ui.sections["rage_main"]:Toggle({ Name = "Always Sprint", Flag = "Always Sprint" })
+            ui.sections["rage_main"]:Toggle({ Name = "Spiderclimb", Flag = "Spiderclimb" })
+
+            ui.sections["rage_main"]:Keybind({
+                Flag = "Spiderclimb Keybind",
+                Name = "Spiderclimb Keybind",
+                Default = Enum.KeyCode.Space,
+                Mode = "Hold",
+            })
+            ui.sections["rage_main"]:Slider({
+                Name = "Spiderclimb Speed",
+                Flag = "Spiderclimb Speed",
+                Default = 0.75,
+                Minimum = 0.5,
+                Maximum = 1.5,
+                Decimals = 0.01,
+                Ending = "",
+            })
         end
-    end
+        
+         do
+            ui.sections["camera"] = ui.tabs["rage"]:Section({ Name = "Camera", Side = "Right", Size = 187 })
+            ui.sections["camera"]:Toggle({ Name = "FOV", Flag = "FOV" })
+            ui.sections["camera"]:Slider({
+                Name = "FOV Ammount",
+                Flag = "FOV Ammount",
+                Default = 70,
+                Minimum = 30,
+                Maximum = 120,
+                Decimals = 1,
+                Ending = "x",
+            })
+            ui.sections["camera"]:Toggle({ Name = "Zoom", Flag = "Zoom" })
+            ui.sections["camera"]:Keybind({ Flag = "Zoom Keybind", Name = "Zoom Keybind", Mode = "Hold" })
+            ui.sections["camera"]:Slider({
+                Name = "Zoom Ammount",
+                Flag = "Zoom Ammount",
+                Default = 30,
+                Minimum = 5,
+                Maximum = 70,
+                Decimals = 1,
+                Ending = "x",
+            })
+        end
+        end
+        
 
-    updateDrawings()
-end
-
-function updateDrawings()
-    if not crosshair.object then return end
-
-    if settings.crosshairType == "circle" then
-        local circle = crosshair.object
-        circle.Position = screenCenter
-        circle.Radius = settings.size * 10
-        circle.Color = settings.color
-        circle.Visible = settings.visible
-
-    elseif settings.crosshairType == "square" then
-        local square = crosshair.object
-        square.Position = screenCenter - Vector2.new(settings.size * 5, settings.size * 5)
-        square.Size = Vector2.new(settings.size * 10, settings.size * 10)
-        square.Color = settings.color
-        square.Visible = settings.visible
-
-    elseif settings.crosshairType == "x" then
-        local s = settings.size * 5
-        local line1 = crosshair.object[1]
-        local line2 = crosshair.object[2]
-
-        line1.From = screenCenter - Vector2.new(s, s)
-        line1.To = screenCenter + Vector2.new(s, s)
-        line2.From = screenCenter + Vector2.new(s, -s)
-        line2.To = screenCenter - Vector2.new(s, -s)
-
-        line1.Color = settings.color
-        line2.Color = settings.color
-        line1.Visible = settings.visible
-        line2.Visible = settings.visible
-    end
-end
-
-local function updateVisibility(visible)
-    settings.visible = visible
-    updateDrawings()
-end
-
-local function updateCrosshairType(newType)
-    createCrosshair(newType)
-end
-
-local function updateSize(size)
-    settings.size = size
-    updateDrawings()
-end
-
-local function updateColor(color)
-    settings.color = color
-    updateDrawings()
-end
-
-local function updateSpinSpeed(speed)
-    settings.spinSpeed = speed
-end
-
-local function toggleSpinning(isSpinning)
-    settings.isSpinning = isSpinning
-end
-
-local function rotateLine(from, to, angle)
-    local sin, cos = math.sin(angle), math.cos(angle)
-    local relFrom = from - screenCenter
-    local relTo = to - screenCenter
-    local rotFrom = Vector2.new(relFrom.X * cos - relFrom.Y * sin, relFrom.X * sin + relFrom.Y * cos) + screenCenter
-    local rotTo = Vector2.new(relTo.X * cos - relTo.Y * sin, relTo.X * sin + relTo.Y * cos) + screenCenter
-    return rotFrom, rotTo
-end
-
-local function updateCrosshairRotation()
-    if settings.isSpinning and settings.visible and settings.crosshairType == "x" and type(crosshair.object) == "table" then
-        rotationAngle = (rotationAngle + settings.spinSpeed) % 360
-        local angle = math.rad(rotationAngle)
-        local s = settings.size * 5
-        local line1 = crosshair.object[1]
-        local line2 = crosshair.object[2]
-        line1.From, line1.To = rotateLine(screenCenter - Vector2.new(s, s), screenCenter + Vector2.new(s, s), angle)
-        line2.From, line2.To = rotateLine(screenCenter + Vector2.new(s, -s), screenCenter - Vector2.new(s, -s), angle)
-    end
-end
-
-workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateCenter)
-
-ui.sections["Crosshair"] = ui.tabs["local"]:Section({ Name = "Crosshair", Side = "Left", Size = 240 })
-
-ui.sections["Crosshair"]:List({
-    Name = "Crosshair Type",
-    Flag = "Crosshair_Type",
-    Options = {"circle", "square", "x"},
-    Default = "circle",
-    Callback = function(selectedType)
-        updateCrosshairType(selectedType)
-    end,
-})
-
-ui.sections["Crosshair"]:Toggle({
-    Name = "Toggle Crosshair",
-    Flag = "Crosshair_Toggle",
-    Default = false,
-    Callback = function(visible)
-        updateVisibility(visible)
-    end,
-})
-
-ui.sections["Crosshair"]:Slider({
-    Name = "Crosshair Size",
-    Flag = "CrosshairSizeSlider",
-    Default = 0.6,
-    Minimum = 0.05,
-    Maximum = 5,
-    Decimals = 0.01,
-    Callback = function(size)
-        updateSize(size)
-    end,
-})
-
-ui.sections["Crosshair"]:Colorpicker({
-    Name = "Crosshair Color",
-    Flag = "Crosshair_Color",
-    Default = Color3.fromRGB(255, 255, 255),
-    Callback = function(color)
-        updateColor(color)
-    end,
-})
-
-ui.sections["Crosshair"]:Toggle({
-    Name = "Toggle Spinning",
-    Flag = "Crosshair_Spinning_Toggle",
-    Default = false,
-    Callback = function(state)
-        toggleSpinning(state)
-    end,
-})
-
-ui.sections["Crosshair"]:Slider({
-    Name = "Spin Speed",
-    Flag = "Crosshair_SpinSpeed",
-    Default = 5,
-    Minimum = 1,
-    Maximum = 20,
-    Decimals = 0.1,
-    Ending = "s",
-    Callback = function(speed)
-        updateSpinSpeed(speed)
-    end,
-})
-
-createCrosshair(settings.crosshairType)
-
-game:GetService("RunService").Heartbeat:Connect(updateCrosshairRotation)
-    --
     do -- settings
         ui.window:Seperator({ Name = "Settings" })
         ui.tabs["settings"] = ui.window:Page({
@@ -2609,7 +2620,7 @@ game:GetService("RunService").Heartbeat:Connect(updateCrosshairRotation)
         })
         Library:Configs(ui.tabs["settings"])
     end
-end
+    end
 --
 do -- fov circle
     local FieldOfView =
