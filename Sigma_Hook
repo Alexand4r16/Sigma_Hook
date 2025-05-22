@@ -71,8 +71,8 @@ local Library = loadstring(
     cheatname = "SigmaHook",
     gamename = "SigmaHook",
     fileext = ".cfg",
-    logo = "120404302634102, 112718759480045",
-    icon = "120404302634102, 112718759480045",
+    logo = "120404302634102",
+    icon = "120404302634102",
     Accent = default_color,
 })
 local Flags, Pointers = Library.Flags, Library.Pointers
