@@ -1227,12 +1227,13 @@ local ui = {
     sections = {},
     tabs = {},
 }
-ui.window = Library:New({ Size = UDim2.new(0, 600, 0, 600) })
+ui.window = Library:New({ Size = UDim2.new(0, 600, 0, 650) })
 --
 getgenv().silent = false
 getgenv().silent_key = false
 getgenv().silent_hitchance = 100
---
+getgenv().wall_bang = false
+
 do -- menu
     do -- combat
         ui.window:Seperator({ Name = "Combat Settings" })
@@ -1242,7 +1243,7 @@ do -- menu
             Icon = "http://www.roblox.com/asset/?id=6023426921",
         })
         do
-            ui.sections["legit_main"] = ui.tabs["General"]:Section({ Name = "Main", Side = "Left", Size = 427 })
+            ui.sections["legit_main"] = ui.tabs["General"]:Section({ Name = "Main", Side = "Left", Size = 400 })
             ui.sections["legit_main"]:Toggle({ Name = "Aimbot", Flag = "Enable Aimbot" })
             ui.sections["legit_main"]:Toggle({
                 Name = "Silent Aim",
@@ -1251,6 +1252,7 @@ do -- menu
                     getgenv().silent = state    
                 end,
             })
+           
             ui.sections["legit_main"]:Toggle({ Name = "Inventory Viewer", Flag = "Armor Viewer" })
             ui.sections["legit_main"]:Toggle({ Name = "Auto Shoot", Flag = "Enable Auto Shoot" })
             ui.sections["legit_main"]:Keybind({
@@ -1307,7 +1309,7 @@ do -- menu
         end
         
         do
-            ui.sections["select_options"] = ui.tabs["General"]:Section({ Name = "Select", Side = "Right", Size = 427 })
+            ui.sections["select_options"] = ui.tabs["General"]:Section({ Name = "Select", Side = "Right", Size = 250 })
             ui.sections["select_options"]:Toggle({ Name = "Team Check", Flag = "Friendly Check" })
             ui.sections["select_options"]:Toggle({ Name = "Visible Check", Flag = "Visible Check" })
             ui.sections["select_options"]:Toggle({ Name = "FOV Circle", Flag = "Enable FOV" })
@@ -1341,7 +1343,7 @@ do -- menu
             Icon = "http://www.roblox.com/asset/?id=6031075931",
         })
         do
-            ui.sections["esp"] = ui.tabs["Visuals"]:Section({ Name = "ESP", Side = "Left", Size = 423 })
+            ui.sections["esp"] = ui.tabs["Visuals"]:Section({ Name = "ESP", Side = "Left", Size = 455 })
             ui.sections["esp"]:Toggle({ Name = "Names", Flag = "Enable Names" })
             ui.sections["esp"]:Toggle({ Name = "Boxes", Flag = "Enable Boxes" })
             ui.sections["esp"]:Toggle({ Name = "Distance", Flag = "Enable Distance" })
@@ -1501,7 +1503,7 @@ do -- menu
         
         do
             ui.sections["world customisation"] =
-            ui.tabs["world"]:Section({ Name = "World Customisation", Side = "Right", Size = 287 })
+            ui.tabs["world"]:Section({ Name = "World Customisation", Side = "Right", Size = 250 })
             ui.sections["world customisation"]:Toggle({
                 Name = "No Grass",
                 Callback = function(state)
@@ -1927,168 +1929,7 @@ game:GetService("RunService").Heartbeat:Connect(updateCrosshairRotation)
                 end,
             })
             --
-local uis        = game:GetService("UserInputService")
-local players    = game:GetService("Players")
-local runService = game:GetService("RunService")
-local local_player = players.LocalPlayer
 
--- Configuration
-local WALK_SPEED         = 20
-local FORCEFIELD_COLOR   = BrickColor.new("Bright violet")
-local SHOW_DISTANCE_TEXT = true
-local MAX_DISTANCE       = 8
-
-local remake = {
-    enabled        = false,
-    startReplica   = nil,
-    startPosition  = nil,
-    remakePosition = nil,
-    distanceText   = Drawing.new("Text"),
-    character      = nil,
-    diedConnection = nil,
-}
-
-remake.distanceText.Size     = 18
-remake.distanceText.Center   = true
-remake.distanceText.Outline  = true
-remake.distanceText.Visible  = false
-remake.distanceText.Position = Vector2.new(
-    workspace.CurrentCamera.ViewportSize.X/2,
-    workspace.CurrentCamera.ViewportSize.Y/2 + 50
-)
-
-local function createClone(character, color)
-    local replica = Instance.new("Model")
-    replica.Name = "ForcefieldClone"
-    for _, part in ipairs(character:GetDescendants()) do
-        if part:IsA("BasePart") then
-            local clone = Instance.new("Part")
-            clone.Size       = part.Size
-            clone.CFrame     = part.CFrame
-            clone.Anchored   = true
-            clone.CanCollide = false
-            clone.Material   = Enum.Material.ForceField
-            clone.BrickColor = color
-
-            local mesh = part:FindFirstChildWhichIsA("SpecialMesh")
-            if mesh then
-                local meshClone = Instance.new("SpecialMesh")
-                pcall(function()
-                    meshClone.MeshType  = mesh.MeshType
-                    meshClone.MeshId    = mesh.MeshId
-                    meshClone.TextureId = mesh.TextureId
-                    meshClone.Scale     = mesh.Scale
-                end)
-                meshClone.Parent = clone
-            end
-
-            clone.Parent = replica
-        end
-    end
-    replica.Parent = workspace
-    return replica
-end
-
-local function ManipulationReset()
-    remake.enabled = false
-    if remake.startReplica then
-        remake.startReplica:Destroy()
-        remake.startReplica = nil
-    end
-    remake.distanceText.Visible = false
-    if remake.character and remake.character:FindFirstChild("HumanoidRootPart") then
-        remake.character.HumanoidRootPart.Anchored = false
-    end
-end
-
-local function updateCharacterReferences()
-    remake.character = local_player.Character or local_player.CharacterAdded:Wait()
-    remake.character:WaitForChild("HumanoidRootPart")
-    remake.character:WaitForChild("Humanoid")
-
-    if remake.diedConnection then
-        remake.diedConnection:Disconnect()
-    end
-    remake.diedConnection = remake.character.Humanoid.Died:Connect(ManipulationReset)
-end
-
-updateCharacterReferences()
-local_player.CharacterAdded:Connect(function()
-    ManipulationReset()
-    updateCharacterReferences()
-end)
-
-if ui and ui.sections and ui.sections["rage_main"] then
-    ui.sections["rage_main"]:Toggle({
-        Name     = "Manipulation",
-        Flag     = "zins_Enabled",
-        Callback = function(val)
-            Flags["zins_Enabled"] = val
-            if not val then
-                ManipulationReset()
-            end
-        end,
-    })
-
-ui.sections["rage_main"]:Keybind({
-    Flag = "zins_keybind",
-    Name = "Keybind",
-    Default = Enum.KeyCode.F,
-    Mode = "Toggle",
-    })
-end
-runService.RenderStepped:Connect(function(deltaTime)
-
-    if Flags["zins_Enabled"] and Flags["zins_keybind"] then
-        if not remake.enabled then
-            remake.enabled        = true
-            local root            = remake.character:FindFirstChild("HumanoidRootPart")
-            if root then
-                root.Anchored        = true
-                remake.startPosition = root.Position
-                remake.remakePosition= root.Position
-                remake.startReplica  = createClone(remake.character, FORCEFIELD_COLOR)
-                if SHOW_DISTANCE_TEXT then
-                    remake.distanceText.Visible = true
-                end
-            end
-        end
-    else
-        if remake.enabled then
-            ManipulationReset()
-        end
-    end
-
-    if remake.enabled then
-        local root = remake.character and remake.character:FindFirstChild("HumanoidRootPart")
-        if root then
-            local dir = Vector3.new()
-            if uis:IsKeyDown(Enum.KeyCode.W) then dir += Vector3.new(0,0,-1) end
-            if uis:IsKeyDown(Enum.KeyCode.A) then dir += Vector3.new(-1,0,0) end
-            if uis:IsKeyDown(Enum.KeyCode.S) then dir += Vector3.new(0,0,1) end
-            if uis:IsKeyDown(Enum.KeyCode.D) then dir += Vector3.new(1,0,0) end
-
-            if dir.Magnitude > 0 then
-                dir = dir.Unit * WALK_SPEED * deltaTime
-            end
-
-            local newPos = root.Position + root.CFrame:VectorToWorldSpace(dir)
-            local dist   = (newPos - remake.startPosition).Magnitude
-            if dist > MAX_DISTANCE then
-                newPos = remake.startPosition + (newPos - remake.startPosition).Unit * MAX_DISTANCE
-            end
-
-            root.CFrame = CFrame.new(newPos)
-            remake.remakePosition = newPos
-
-            if SHOW_DISTANCE_TEXT then
-                local d = (remake.remakePosition - remake.startPosition).Magnitude
-                remake.distanceText.Text  = string.format("Manipulating: %.2f", d)
-                remake.distanceText.Color = Color3.new(1,1,1)
-            end
-        end
-    end
-end)
             --
             ui.sections["rage_weaponmods"]:Toggle({
                 Name = "No Spread",
@@ -2217,7 +2058,77 @@ end)
         end
         end
         do
-                ui.sections["traps"] = ui.tabs["Misc"]:Section({ Name = "Misc Fun", Side = "Left", Size = 250 })
+            local bases_folder = {
+                workspace.Bases.Loners:FindFirstChild("External Wooden Gate") or nil,
+                workspace.Bases.Loners:FindFirstChild("External Stone Gate") or nil,
+            }
+
+            for _, v in pairs(workspace.Bases:GetChildren()) do
+                if v:IsA("Folder") and v.Name == "Base" then
+                    for _, sub in ipairs({"Doorway", "Floor", "Triangle Floor", "Foundation", "Triangle Foundation", "Wall", "Wall Frame", "Window"}) do
+                        local sub_folder = v:FindFirstChild(sub)
+                        if sub_folder then
+                            table.insert(bases_folder, sub_folder)
+                        end
+                    end
+                end
+            end
+
+            getgenv().xray_toggle = false
+            getgenv().xray_enabled = false
+            getgenv().xray_opacity = 0.5
+
+            local function upd_xray(state)
+                if not getgenv().xray_toggle then
+                    return
+                end
+                for _, v in pairs(bases_folder) do
+                    for _, obj in ipairs(v:GetDescendants()) do
+                        if obj:IsA("MeshPart") then
+                            obj.Transparency = state and getgenv().xray_opacity or 0
+                        end
+                    end
+                end
+            end
+             ui.sections["xray"] = ui.tabs["Misc"]:Section({ Name = "Xray", Side = "Left", Size = 133 })
+            ui.sections["xray"]:Toggle({
+                Name = "Enable",
+                Flag = "Enable Xray",
+                Callback = function(state)
+                    getgenv().xray_toggle = state
+                end,
+            })
+            ui.sections["xray"]:Keybind({
+                Flag = "Xray Keybind",
+                Name = "Xray Keybind",
+                Default = Enum.KeyCode.T,
+                Mode = "Toggle",
+                Callback = function()
+                    if getgenv().xray_toggle then
+                        getgenv().xray_enabled = not getgenv().xray_enabled
+                        upd_xray(getgenv().xray_enabled)
+                    end
+                end,
+            })
+            ui.sections["xray"]:Slider({
+                Name = "Opacity",
+                Flag = "Xray Opacity",
+                Default = 50,
+                Minimum = 0,
+                Maximum = 100,
+                Decimals = 1,
+                Ending = "%",
+                Callback = function(state)
+                    getgenv().xray_opacity = state / 100
+                    if getgenv().xray_toggle and getgenv().xray_enabled then
+                        upd_xray(true)
+                    end
+                end,
+            })
+        end
+
+        do
+                ui.sections["traps"] = ui.tabs["Misc"]:Section({ Name = "Misc Fun", Side = "Left", Size = 287 })
                 ui.sections["traps"]:Toggle({ Name = "Bullet Tracers", Flag = "Bullet Tracers" })
                 ui.sections["traps"]:Toggle({ Name = "Hitmarkers", Flag = "Hitmarkers" })
                 ui.sections["traps"]:Toggle({ Name = "Hitsounds", Flag = "Hitsounds" })
@@ -2486,76 +2397,7 @@ end)
                     end
                 end)
             end
-            do
-            local bases_folder = {
-                workspace.Bases.Loners:FindFirstChild("External Wooden Gate") or nil,
-                workspace.Bases.Loners:FindFirstChild("External Stone Gate") or nil,
-            }
-
-            for _, v in pairs(workspace.Bases:GetChildren()) do
-                if v:IsA("Folder") and v.Name == "Base" then
-                    for _, sub in ipairs({"Doorway", "Floor", "Triangle Floor", "Foundation", "Triangle Foundation", "Wall", "Wall Frame", "Window"}) do
-                        local sub_folder = v:FindFirstChild(sub)
-                        if sub_folder then
-                            table.insert(bases_folder, sub_folder)
-                        end
-                    end
-                end
-            end
-
-            getgenv().xray_toggle = false
-            getgenv().xray_enabled = false
-            getgenv().xray_opacity = 0.5
-
-            local function upd_xray(state)
-                if not getgenv().xray_toggle then
-                    return
-                end
-                for _, v in pairs(bases_folder) do
-                    for _, obj in ipairs(v:GetDescendants()) do
-                        if obj:IsA("MeshPart") then
-                            obj.Transparency = state and getgenv().xray_opacity or 0
-                        end
-                    end
-                end
-            end
-        
-            ui.sections["xray"] = ui.tabs["Misc"]:Section({ Name = "Xray", Side = "Left", Size = 133 })
-            ui.sections["xray"]:Toggle({
-                Name = "Enable",
-                Flag = "Enable Xray",
-                Callback = function(state)
-                    getgenv().xray_toggle = state
-                end,
-            })
-            ui.sections["xray"]:Keybind({
-                Flag = "Xray Keybind",
-                Name = "Xray Keybind",
-                Default = Enum.KeyCode.T,
-                Mode = "Toggle",
-                Callback = function()
-                    if getgenv().xray_toggle then
-                        getgenv().xray_enabled = not getgenv().xray_enabled
-                        upd_xray(getgenv().xray_enabled)
-                    end
-                end,
-            })
-            ui.sections["xray"]:Slider({
-                Name = "Opacity",
-                Flag = "Xray Opacity",
-                Default = 50,
-                Minimum = 0,
-                Maximum = 100,
-                Decimals = 1,
-                Ending = "%",
-                Callback = function(state)
-                    getgenv().xray_opacity = state / 100
-                    if getgenv().xray_toggle and getgenv().xray_enabled then
-                        upd_xray(true)
-                    end
-                end,
-            })
-        end
+            
 
     ui.tabs["rage"] = ui.window:Page({
             Name = "Rage",
@@ -2563,7 +2405,7 @@ end)
         })
 
         do
-            ui.sections["rage_main"] = ui.tabs["rage"]:Section({ Name = "Player", Side = "Left", Size = 427 })
+            ui.sections["rage_main"] = ui.tabs["rage"]:Section({ Name = "Player", Side = "Left", Size = 230 })
             ui.sections["rage_main"]:Toggle({ Name = "Always Grounded", Flag = "Always Grounded" })
             ui.sections["rage_main"]:Toggle({ Name = "Always Sprint", Flag = "Always Sprint" })
             ui.sections["rage_main"]:Toggle({ Name = "Spiderclimb", Flag = "Spiderclimb" })
@@ -2584,6 +2426,169 @@ end)
                 Ending = "",
             })
         end
+
+        local uis        = game:GetService("UserInputService")
+local players    = game:GetService("Players")
+local runService = game:GetService("RunService")
+local local_player = players.LocalPlayer
+
+-- Configuration
+local WALK_SPEED         = 20
+local FORCEFIELD_COLOR   = BrickColor.new("Bright violet")
+local SHOW_DISTANCE_TEXT = true
+local MAX_DISTANCE       = 8
+
+local remake = {
+    enabled        = false,
+    startReplica   = nil,
+    startPosition  = nil,
+    remakePosition = nil,
+    distanceText   = Drawing.new("Text"),
+    character      = nil,
+    diedConnection = nil,
+}
+
+remake.distanceText.Size     = 18
+remake.distanceText.Center   = true
+remake.distanceText.Outline  = true
+remake.distanceText.Visible  = false
+remake.distanceText.Position = Vector2.new(
+    workspace.CurrentCamera.ViewportSize.X/2,
+    workspace.CurrentCamera.ViewportSize.Y/2 + 50
+)
+
+local function createClone(character, color)
+    local replica = Instance.new("Model")
+    replica.Name = "ForcefieldClone"
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local clone = Instance.new("Part")
+            clone.Size       = part.Size
+            clone.CFrame     = part.CFrame
+            clone.Anchored   = true
+            clone.CanCollide = false
+            clone.Material   = Enum.Material.ForceField
+            clone.BrickColor = color
+
+            local mesh = part:FindFirstChildWhichIsA("SpecialMesh")
+            if mesh then
+                local meshClone = Instance.new("SpecialMesh")
+                pcall(function()
+                    meshClone.MeshType  = mesh.MeshType
+                    meshClone.MeshId    = mesh.MeshId
+                    meshClone.TextureId = mesh.TextureId
+                    meshClone.Scale     = mesh.Scale
+                end)
+                meshClone.Parent = clone
+            end
+
+            clone.Parent = replica
+        end
+    end
+    replica.Parent = workspace
+    return replica
+end
+
+local function ManipulationReset()
+    remake.enabled = false
+    if remake.startReplica then
+        remake.startReplica:Destroy()
+        remake.startReplica = nil
+    end
+    remake.distanceText.Visible = false
+    if remake.character and remake.character:FindFirstChild("HumanoidRootPart") then
+        remake.character.HumanoidRootPart.Anchored = false
+    end
+end
+
+local function updateCharacterReferences()
+    remake.character = local_player.Character or local_player.CharacterAdded:Wait()
+    remake.character:WaitForChild("HumanoidRootPart")
+    remake.character:WaitForChild("Humanoid")
+
+    if remake.diedConnection then
+        remake.diedConnection:Disconnect()
+    end
+    remake.diedConnection = remake.character.Humanoid.Died:Connect(ManipulationReset)
+end
+
+updateCharacterReferences()
+local_player.CharacterAdded:Connect(function()
+    ManipulationReset()
+    updateCharacterReferences()
+end)
+
+if ui and ui.sections and ui.sections["rage_main"] then
+    ui.sections["rage_main"]:Toggle({
+        Name     = "Manipulation",
+        Flag     = "zins_Enabled",
+        Callback = function(val)
+            Flags["zins_Enabled"] = val
+            if not val then
+                ManipulationReset()
+            end
+        end,
+    })
+
+ui.sections["rage_main"]:Keybind({
+    Flag = "zins_keybind",
+    Name = "Keybind",
+    Default = Enum.KeyCode.F,
+    Mode = "Toggle",
+    })
+end
+runService.RenderStepped:Connect(function(deltaTime)
+
+    if Flags["zins_Enabled"] and Flags["zins_keybind"] then
+        if not remake.enabled then
+            remake.enabled        = true
+            local root            = remake.character:FindFirstChild("HumanoidRootPart")
+            if root then
+                root.Anchored        = true
+                remake.startPosition = root.Position
+                remake.remakePosition= root.Position
+                remake.startReplica  = createClone(remake.character, FORCEFIELD_COLOR)
+                if SHOW_DISTANCE_TEXT then
+                    remake.distanceText.Visible = true
+                end
+            end
+        end
+    else
+        if remake.enabled then
+            ManipulationReset()
+        end
+    end
+
+    if remake.enabled then
+        local root = remake.character and remake.character:FindFirstChild("HumanoidRootPart")
+        if root then
+            local dir = Vector3.new()
+            if uis:IsKeyDown(Enum.KeyCode.W) then dir += Vector3.new(0,0,-1) end
+            if uis:IsKeyDown(Enum.KeyCode.A) then dir += Vector3.new(-1,0,0) end
+            if uis:IsKeyDown(Enum.KeyCode.S) then dir += Vector3.new(0,0,1) end
+            if uis:IsKeyDown(Enum.KeyCode.D) then dir += Vector3.new(1,0,0) end
+
+            if dir.Magnitude > 0 then
+                dir = dir.Unit * WALK_SPEED * deltaTime
+            end
+
+            local newPos = root.Position + root.CFrame:VectorToWorldSpace(dir)
+            local dist   = (newPos - remake.startPosition).Magnitude
+            if dist > MAX_DISTANCE then
+                newPos = remake.startPosition + (newPos - remake.startPosition).Unit * MAX_DISTANCE
+            end
+
+            root.CFrame = CFrame.new(newPos)
+            remake.remakePosition = newPos
+
+            if SHOW_DISTANCE_TEXT then
+                local d = (remake.remakePosition - remake.startPosition).Magnitude
+                remake.distanceText.Text  = string.format("Manipulating: %.2f", d)
+                remake.distanceText.Color = Color3.new(1,1,1)
+            end
+        end
+    end
+end)
         
          do
             ui.sections["camera"] = ui.tabs["rage"]:Section({ Name = "Camera", Side = "Right", Size = 187 })
